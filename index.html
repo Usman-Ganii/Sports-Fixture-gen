@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <title>Arena — Sports Fixture Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="Arena home">
+        <span class="brand-mark">A</span><span><b>ARENA</b><small>SPORTS OPERATIONS</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="side-nav">
+        <button class="nav-link active" data-page="overview"><span class="nav-icon">▦</span> Overview</button>
+        <button class="nav-link" data-page="fixtures"><span class="nav-icon">▤</span> Fixtures <span class="nav-count"
+            id="navFixtureCount">0</span></button>
+        <button class="nav-link" data-page="teams"><span class="nav-icon">♙</span> Teams</button>
+        <button class="nav-link" data-page="venues"><span class="nav-icon">⌖</span> Venues</button>
+        <button class="nav-link" data-page="data"><span class="nav-icon">⇧</span> Data & CSV</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="local-note"><span class="pulse"></span>
+          <div><b>Local workspace</b><small>Your data stays in this browser</small></div>
+        </div>
+        <button class="nav-link" id="resetDemo"><span class="nav-icon">↻</span> Reset demo data</button>
+        <div class="sidebar-foot">ARENA v2.0 · CLIENT SIDE</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Open navigation">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <b id="crumb">Overview</b></div>
+        <div class="top-actions"><span class="live-dot"></span><span class="top-status">All changes saved
+            locally</span><span class="avatar">SP</span></div>
+      </header>
+
+      <div class="content">
+        <section class="page active" id="page-overview">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">TOURNAMENT CONTROL CENTER</div>
+              <h1>Good day, Organizer<span class="heading-period">.</span></h1>
+              <p>Manage teams, venues and fixtures from one place.</p>
+            </div>
+            <button class="btn btn-primary" id="quickGenerate"><span>✦</span> Generate fixtures</button>
+          </div>
+          <div class="stats-grid">
+            <article class="stat-card">
+              <div class="stat-top"><span>Total teams</span><span class="stat-icon blue">♙</span></div><strong
+                id="statTeams">0</strong><small><i class="positive">●</i> Participating teams</small>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span>Sports entered</span><span class="stat-icon violet">🏆</span></div><strong
+                id="statSports">0</strong><small>Configured competitions</small>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span>Available venues</span><span class="stat-icon cyan">⌖</span></div><strong
+                id="statVenues">0</strong><small>Eligible locations</small>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span>Matches scheduled</span><span class="stat-icon green">✓</span></div><strong
+                id="statScheduled">0</strong><small id="statPending">0 unscheduled</small>
+            </article>
+          </div>
+          <div class="dashboard-grid">
+            <section class="card main-card">
+              <div class="card-heading">
+                <div>
+                  <h2>Schedule snapshot</h2>
+                  <p>Your upcoming fixtures at a glance.</p>
+                </div><button class="text-btn" data-goto="fixtures">View all fixtures ↗</button>
+              </div>
+              <div id="overviewFixtures" class="mini-fixtures"></div>
+            </section>
+            <section class="card side-card">
+              <div class="card-heading">
+                <div>
+                  <h2>Schedule health</h2>
+                  <p>Constraint validation summary.</p>
+                </div>
+              </div>
+              <div class="health-score">
+                <div class="score-ring" id="scoreRing"><span id="healthPercent">—</span></div>
+                <div><b id="healthTitle">Not generated</b><small id="healthSubtitle">Generate a schedule to run
+                    checks.</small></div>
+              </div>
+              <div class="health-row"><span>Scheduled</span><b id="healthScheduled">0</b></div>
+              <div class="health-row"><span>Unscheduled</span><b id="healthUnscheduled">0</b></div>
+              <div class="health-row"><span>Detected violations</span><b id="healthViolations">0</b></div>
+              <button class="btn btn-secondary btn-full" data-goto="fixtures">Review schedule</button>
+            </section>
+          </div>
+          <section class="card quick-card">
+            <div class="card-heading">
+              <div>
+                <h2>Quick actions</h2>
+                <p>Continue setting up your tournament.</p>
+              </div>
+            </div>
+            <div class="quick-actions">
+              <button class="quick-action" data-goto="data"><span class="quick-icon">⇧</span><b>Import CSV
+                  files</b><small>Upload teams, sports and venues</small><span class="quick-arrow">↗</span></button>
+              <button class="quick-action" data-goto="teams"><span class="quick-icon">♙</span><b>Review
+                  teams</b><small>Check sports participation</small><span class="quick-arrow">↗</span></button>
+              <button class="quick-action" data-goto="venues"><span class="quick-icon">⌖</span><b>Review
+                  venues</b><small>Check venue availability</small><span class="quick-arrow">↗</span></button>
+            </div>
+          </section>
+        </section>
+
+        <section class="page" id="page-fixtures">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">MATCH MANAGEMENT</div>
+              <h1>Fixtures<span class="heading-period">.</span></h1>
+              <p>Review, filter, regenerate and export your tournament schedule.</p>
+            </div>
+            <div class="heading-actions"><button class="btn btn-secondary" id="exportFixtures">↓ Export
+                CSV</button><button class="btn btn-primary" id="generatePage">✦ Generate</button></div>
+          </div>
+          <div class="card schedule-config">
+            <div class="card-heading">
+              <div>
+                <h2>Schedule settings</h2>
+                <p>Choose the tournament window and slot interval before generating.</p>
+              </div>
+            </div>
+            <div class="schedule-controls">
+              <label>Start date<input type="date" id="startDateInput" value="2026-12-01"></label>
+              <label>Number of days<input type="number" id="daysInput" min="1" max="31" value="3"></label>
+              <label>Slot interval<select id="slotInput">
+                  <option value="15">15 minutes</option>
+                  <option value="30" selected>30 minutes</option>
+                  <option value="60">60 minutes</option>
+                </select></label>
+            </div>
+          </div>
+          <div class="filter-bar">
+            <div class="segmented" id="viewTabs"><button class="selected" data-view="day">By day</button><button
+                data-view="venue">By venue</button><button data-view="team">By team</button><button data-view="all">All
+                matches</button></div>
+            <select id="sportFilter" aria-label="Filter by sport">
+              <option value="all">All sports</option>
+            </select>
+            <select id="statusFilter" aria-label="Filter by status">
+              <option value="all">All statuses</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="unscheduled">Unscheduled</option>
+            </select>
+          </div>
+          <div class="fixture-summary" id="fixtureSummary"></div>
+          <div id="fixtureContent" class="fixture-content">
+            <div class="empty-state">No fixtures yet. Generate your schedule to get started.</div>
+          </div>
+          <div class="card diagnostics-card">
+            <div class="card-heading">
+              <div>
+                <h2>Scheduling diagnostics</h2>
+                <p>Matches that could not be placed and the reason.</p>
+              </div>
+            </div>
+            <div id="diagnostics"></div>
+          </div>
+        </section>
+
+        <section class="page" id="page-teams">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">PARTICIPANTS</div>
+              <h1>Teams<span class="heading-period">.</span></h1>
+              <p>Departments and the sports they have entered.</p>
+            </div><button class="btn btn-secondary" data-goto="data">Manage CSV data ↗</button>
+          </div>
+          <div class="card table-card">
+            <div class="card-heading">
+              <div>
+                <h2>Registered teams</h2>
+                <p id="teamCaption">Team participation overview.</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>TEAM</th>
+                    <th>DEPARTMENT</th>
+                    <th>SPORTS ENTERED</th>
+                  </tr>
+                </thead>
+                <tbody id="teamsTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="page-venues">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">FACILITIES</div>
+              <h1>Venues<span class="heading-period">.</span></h1>
+              <p>Supported sports, available days and operating hours.</p>
+            </div><button class="btn btn-secondary" data-goto="data">Manage CSV data ↗</button>
+          </div>
+          <div class="venue-grid" id="venueGrid"></div>
+        </section>
+
+        <section class="page" id="page-data">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">DATA CONFIGURATION</div>
+              <h1>Data & CSV<span class="heading-period">.</span></h1>
+              <p>Import your college data or start with the built-in sample dataset.</p>
+            </div><button class="btn btn-secondary" id="downloadTemplates">↓ Download CSV templates</button>
+          </div>
+          <div class="card import-card">
+            <div class="card-heading">
+              <div>
+                <h2>Import tournament data</h2>
+                <p>Upload all three files to replace the current dataset. Each file is validated before it is applied.
+                </p>
+              </div><span class="pill pill-blue">CSV IMPORT</span>
+            </div>
+            <div class="upload-grid">
+              <label class="upload-tile"><span class="upload-symbol">♙</span><b>1. Teams.csv</b><small>Team, department,
+                  sports</small><input type="file" id="teamsFile" accept=".csv,text/csv"><span class="file-status"
+                  id="teamsStatus">Choose CSV file</span></label>
+              <label class="upload-tile"><span class="upload-symbol">🏆</span><b>2. Sports.csv</b><small>Sport, format,
+                  duration, rest</small><input type="file" id="sportsFile" accept=".csv,text/csv"><span
+                  class="file-status" id="sportsStatus">Choose CSV file</span></label>
+              <label class="upload-tile"><span class="upload-symbol">⌖</span><b>3. Venues.csv</b><small>Venue, sports,
+                  days, hours</small><input type="file" id="venuesFile" accept=".csv,text/csv"><span class="file-status"
+                  id="venuesStatus">Choose CSV file</span></label>
+            </div>
+            <div class="import-footer">
+              <div class="import-message" id="importMessage"><span class="message-dot"></span>Demo dataset is active.
+                Upload the three files to use your college data.</div><button class="btn btn-primary" id="applyImport"
+                disabled>Apply all 3 files</button>
+            </div>
+          </div>
+          <div class="two-col">
+            <section class="card">
+              <div class="card-heading">
+                <div>
+                  <h2>CSV format guide</h2>
+                  <p>Use these exact headers in the first row.</p>
+                </div>
+              </div>
+              <div class="format-block"><b>Teams.csv</b><code>team,department,sports</code><small>Example: CSE,Computer
+                  Science,Cricket;Football</small></div>
+              <div class="format-block"><b>Sports.csv</b><code>sport,format,duration,rest</code><small>Format: league or
+                  knockout. Duration and rest are minutes.</small></div>
+              <div class="format-block">
+                <b>Venues.csv</b><code>venue,sports,available_days,start_time,end_time</code><small>Days:
+                  Monday;Tuesday. Time: 09:00 (24-hour format).</small></div>
+            </section>
+            <section class="card">
+              <div class="card-heading">
+                <div>
+                  <h2>Scheduling rules</h2>
+                  <p>Constraints applied by the generator.</p>
+                </div>
+              </div>
+              <ul class="rule-list">
+                <li><span>✓</span> A team cannot play two matches at once.</li>
+                <li><span>✓</span> Required rest time is enforced across days.</li>
+                <li><span>✓</span> Venues must support the sport.</li>
+                <li><span>✓</span> Matches must fit venue operating hours.</li>
+                <li><span>✓</span> Venues cannot host overlapping matches.</li>
+                <li><span>✓</span> Valid slots are balanced across teams.</li>
+              </ul>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+
+</html>

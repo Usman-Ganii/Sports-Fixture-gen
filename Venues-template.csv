@@ -1,0 +1,4 @@
+venue,sports,available_days,start_time,end_time
+Main Ground,Cricket;Football,Monday;Tuesday;Wednesday;Thursday;Friday,09:00,17:00
+Sports Field,Football;Volleyball,Monday;Tuesday;Wednesday;Thursday;Friday,09:00,16:00
+Indoor Court,Volleyball,Monday;Tuesday;Wednesday;Thursday;Friday,10:00,16:00
